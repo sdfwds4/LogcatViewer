@@ -79,6 +79,12 @@ public class LogcatViewerFloatingView extends StandOutWindow {
 
             try {
                 mLogcatViewerService.restart();
+                try {
+                    String logFilename = "log_" + System.currentTimeMillis() + ".txt";
+                    mLogcatViewerService.startRecording(logFilename, mAdapter.getLogFilterText());
+                } catch (RemoteException e) {
+                    Log.e(LOG_TAG, "StartRecording:Trouble writing the log to a file");
+                }
             } catch (RemoteException e) {
                 Log.e(LOG_TAG, "Could not start LogcatViewerService service");
             }
@@ -291,11 +297,11 @@ public class LogcatViewerFloatingView extends StandOutWindow {
                 view.setVisibility(View.GONE);
                 rootView.findViewById(R.id.recordOn).setVisibility(View.VISIBLE);
                 try {
-                    String logFilename = "log_" + System.currentTimeMillis() + ".txt";
-                    mLogcatViewerService.startRecording(logFilename, mAdapter.getLogFilterText());
+                    mLogcatViewerService.stopRecording();
                 } catch (RemoteException e) {
-                    Log.e(LOG_TAG, "StartRecording:Trouble writing the log to a file");
+                    Log.e(LOG_TAG, "StopRecording:Trouble writing the log to a file");
                 }
+
             }
         });
 
@@ -306,9 +312,10 @@ public class LogcatViewerFloatingView extends StandOutWindow {
                 view.setVisibility(View.GONE);
                 rootView.findViewById(R.id.record).setVisibility(View.VISIBLE);
                 try {
-                    mLogcatViewerService.stopRecording();
+                    String logFilename = "log_" + System.currentTimeMillis() + ".txt";
+                    mLogcatViewerService.startRecording(logFilename, mAdapter.getLogFilterText());
                 } catch (RemoteException e) {
-                    Log.e(LOG_TAG, "StopRecording:Trouble writing the log to a file");
+                    Log.e(LOG_TAG, "StartRecording:Trouble writing the log to a file");
                 }
             }
         });
