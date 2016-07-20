@@ -523,7 +523,11 @@ public class LogcatViewerFloatingView extends StandOutWindow {
 //      emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { "sandeep@fatangare.info" });
         emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "[" + getAppName() + "] Logcat Logs");
         emailIntent.setType("text/plain");
-        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Please find attached logcat logs file.");
+
+        ArrayList<CharSequence> textArrayList = new ArrayList<>();
+        textArrayList.add("Please find attached logcat logs file.");
+
+        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, textArrayList);
 
         //Loop through selected files and add to uri list.
         SparseBooleanArray checkedItemPositions = mRecordsListView.getCheckedItemPositions();
