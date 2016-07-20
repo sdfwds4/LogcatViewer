@@ -52,7 +52,7 @@ To apply new filter-text for recording, new recording should be started.
 
 #### More screenshots
 ###### Enter Filter text       
-![filter](https://github.com/fatangare/LogcatViewer/blob/master/Images/filter.png)   
+![filter](https://github.com/smithaaron/LogcatViewer/blob/master/Images/filter.png)   
 ###### Select log level
 ![loglevel](https://github.com/fatangare/LogcatViewer/blob/master/Images/loglevel.png)  
 ###### Notification
