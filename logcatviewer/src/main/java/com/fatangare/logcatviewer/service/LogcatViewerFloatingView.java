@@ -505,7 +505,7 @@ public class LogcatViewerFloatingView extends StandOutWindow {
      */
     private void shareRecordedLogFiles() {
         //If none is selected, return
-        if (mListView.getCheckedItemCount() == 0) {
+        if (mRecordsListView.getCheckedItemCount() == 0) {
             Toast.makeText(getApplicationContext(), "First select log entry!", Toast.LENGTH_LONG).show();
             return;
         }
@@ -550,7 +550,7 @@ public class LogcatViewerFloatingView extends StandOutWindow {
      * Delete selected 'Saved Logs' files.
      */
     private void deleteRecordedLogFiles() {
-        if (mListView.getCheckedItemCount() == 0) {
+        if (mRecordsListView.getCheckedItemCount() == 0) {
             Toast.makeText(getApplicationContext(), "First select log entry!", Toast.LENGTH_LONG).show();
             return;
         }
