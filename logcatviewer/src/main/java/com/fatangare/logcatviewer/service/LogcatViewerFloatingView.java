@@ -517,34 +517,31 @@ public class LogcatViewerFloatingView extends StandOutWindow {
             return;
         }
 
-        Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND_MULTIPLE);
+        Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
 
         emailIntent.setData(Uri.parse("mailto:"));
-//      emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { "sandeep@fatangare.info" });
         emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "[" + getAppName() + "] Logcat Logs");
         emailIntent.setType("text/plain");
 
-        ArrayList<CharSequence> textArrayList = new ArrayList<>();
-        textArrayList.add("Please find attached logcat logs file.");
-
-        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, textArrayList);
+        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Please find attached logcat logs file.");
 
         //Loop through selected files and add to uri list.
         SparseBooleanArray checkedItemPositions = mRecordsListView.getCheckedItemPositions();
         int cnt = checkedItemPositions.size();
 
         LogRecordsListAdapter logRecordsListAdapter = (LogRecordsListAdapter) mRecordsListView.getAdapter();
-        ArrayList<Uri> uris = new ArrayList<Uri>();
+        Uri fileUri = null;
+        //TODO: Prevent user from selecting more than one file. For now we just choose the last one if multiple are selected
         for (int index = 0; index < cnt; index++) {
             if (checkedItemPositions.valueAt(index)) {
                 File file = (File) logRecordsListAdapter.getItem(checkedItemPositions.keyAt(index));
-                uris.add(Uri.fromFile(file));
+                fileUri = Uri.fromFile(file);
             }
 
         }
 
         //add all files to intent data.
-        emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+        emailIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
 
         //Launching from service so set this flag.
         emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
