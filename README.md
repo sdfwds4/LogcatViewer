@@ -40,15 +40,14 @@ It will launch floating window which will show logcat logs of the application.
 Since it is floating window, user can play around with the application while viewing logcat logs.  
 
 #### Operations which can be done in LogcatViewer:
-1. Pause - Pause listening to logcat logs
-2. Resume - Resume listening to logcat logs
-3. Start Recording - Start storing logcat logs in file. File is stored in android.os.Environment.DIRECTORY_DOWNLOADS+ "/LogcatViewer/"+ getPackageName() directory.
+1. Pause/Resume - Pause/Resume listening to logcat logs
+2. Stop/Start Recording - Recording to file starts automatically when the viewer is launched. File is stored in android.os.Environment.DIRECTORY_DOWNLOADS+ "/LogcatViewer/"+ getPackageName() directory.
 It take filter-text used before recording is started. Any change to filter-text during recording will not update filter-text used for recording.
 To apply new filter-text for recording, new recording should be started.
-4. Stop Recording - Stop storing logcat logs in file.
-5. Enter filter text - Filter logs by filter text. It can be tag, package name or some text.
-6. Select log level - Filter logs by log level.
-7. Reset - Show all logcat logs.      
+3. View saved log files - Here you can share or delete log files saved on the device. (Bear in mind logs are written to file at 5s intervals).
+4. Enter filter text - Filter logs by filter text. It can be tag, package name or some text.
+5. Select log level - Filter logs by log level.
+6. Reset - Show all logcat logs.      
 
 #### More screenshots
 ###### Enter Filter text       
