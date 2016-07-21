@@ -300,12 +300,14 @@ public class LogcatViewerListAdapter extends BaseAdapter {
     private int getTextColorForLogcatEntry(String logcatEntry) {
         String priorityLevel = PRIORITY_LEVEL_VERBOSE; //default:verbose
 
-        //get priority level of log-entry.
-        for (String key : mPriorityLevelColorMap.keySet()) {
-            String key1 = key.trim() + "/";
-            if (logcatEntry.contains(key) || logcatEntry.contains(key1)) {
-                priorityLevel = key;
-                break;
+        if (logcatEntry != null) {
+            //get priority level of log-entry.
+            for (String key : mPriorityLevelColorMap.keySet()) {
+                String key1 = key.trim() + "/";
+                if (logcatEntry.contains(key) || logcatEntry.contains(key1)) {
+                    priorityLevel = key;
+                    break;
+                }
             }
         }
 
