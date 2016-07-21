@@ -285,6 +285,12 @@ public class LogcatViewerListAdapter extends BaseAdapter {
      * @param logcatEntry
      */
     private void addFilterLogcatEntry(String logcatEntry) {
+        // Clear arrays if the amount of entries gets too big, otherwise we eventually get OOM
+        if (mFilteredLogcatData.size() > 10000) {
+            mFilteredLogcatData.clear();
+            mLogcatData.clear();
+        }
+        
         if ((TextUtils.isEmpty(mLogPriorityLevel) || (!TextUtils.isEmpty(mLogPriorityLevel) && priorityLevelConditionForFiltering(logcatEntry))) &&
                 (TextUtils.isEmpty(mLogFilterText) || (!TextUtils.isEmpty(mLogFilterText) &&
                         logcatEntry.toLowerCase().contains(mLogFilterText.toLowerCase())))) {
