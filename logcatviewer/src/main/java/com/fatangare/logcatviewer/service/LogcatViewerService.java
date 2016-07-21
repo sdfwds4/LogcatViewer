@@ -202,6 +202,11 @@ public class LogcatViewerService extends Service {
                 //Read log entry.
                 logEntry = reader.readLine();
 
+                //Dunno why, but sometimes it starts giving nulls. Don't want to log these
+                if (logEntry == null) {
+                    continue;
+                }
+
                 //Send log entry to view.
                 sendLogEntry(logEntry);
 
