@@ -537,7 +537,7 @@ public class LogcatViewerFloatingView extends StandOutWindow {
         for (int index = 0; index < cnt; index++) {
             if (checkedItemPositions.valueAt(index)) {
                 File file = (File) logRecordsListAdapter.getItem(checkedItemPositions.keyAt(index));
-                fileUri = FileProvider.getUriForFile(this, "com.fatangare.logcatviewer.provider", file);
+                fileUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".logcatprovider", file);
             }
 
         }

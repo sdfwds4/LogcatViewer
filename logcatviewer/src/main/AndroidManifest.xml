@@ -9,8 +9,8 @@
 
     <application>
         <provider
-                android:name="android.support.v4.content.FileProvider"
-                android:authorities="com.fatangare.logcatviewer.provider"
+                android:name="com.fatangare.logcatviewer.service.LogcatFileProvider"
+                android:authorities="${applicationId}.logcatprovider"
                 android:exported="false"
                 android:grantUriPermissions="true">
             <meta-data
