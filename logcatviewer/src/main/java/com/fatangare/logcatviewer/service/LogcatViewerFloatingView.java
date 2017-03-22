@@ -27,6 +27,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.RemoteException;
+import android.support.v4.content.FileProvider;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -535,7 +536,7 @@ public class LogcatViewerFloatingView extends StandOutWindow {
         for (int index = 0; index < cnt; index++) {
             if (checkedItemPositions.valueAt(index)) {
                 File file = (File) logRecordsListAdapter.getItem(checkedItemPositions.keyAt(index));
-                fileUri = Uri.fromFile(file);
+                fileUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", file);
             }
 
         }
