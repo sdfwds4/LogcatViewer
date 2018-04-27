@@ -1,0 +1,35 @@
+From 8cb936582643d15aecb9d3eb5ed83818961df732 Mon Sep 17 00:00:00 2001
+From: Aaron Smith <aaron@marinosoftware.com>
+Date: Wed, 20 Jul 2016 14:36:57 +0100
+Subject: [PATCH] Fixed bug where the wrong list was being checked for
+ selection
+
+---
+ .../com/fatangare/logcatviewer/service/LogcatViewerFloatingView.java  | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/logcatviewer/src/main/java/com/fatangare/logcatviewer/service/LogcatViewerFloatingView.java b/logcatviewer/src/main/java/com/fatangare/logcatviewer/service/LogcatViewerFloatingView.java
+index b6202a9..954dbf8 100644
+--- a/logcatviewer/src/main/java/com/fatangare/logcatviewer/service/LogcatViewerFloatingView.java
++++ b/logcatviewer/src/main/java/com/fatangare/logcatviewer/service/LogcatViewerFloatingView.java
+@@ -505,7 +505,7 @@ public class LogcatViewerFloatingView extends StandOutWindow {
+      */
+     private void shareRecordedLogFiles() {
+         //If none is selected, return
+-        if (mListView.getCheckedItemCount() == 0) {
++        if (mRecordsListView.getCheckedItemCount() == 0) {
+             Toast.makeText(getApplicationContext(), "First select log entry!", Toast.LENGTH_LONG).show();
+             return;
+         }
+@@ -550,7 +550,7 @@ public class LogcatViewerFloatingView extends StandOutWindow {
+      * Delete selected 'Saved Logs' files.
+      */
+     private void deleteRecordedLogFiles() {
+-        if (mListView.getCheckedItemCount() == 0) {
++        if (mRecordsListView.getCheckedItemCount() == 0) {
+             Toast.makeText(getApplicationContext(), "First select log entry!", Toast.LENGTH_LONG).show();
+             return;
+         }
+-- 
+2.8.1
+
