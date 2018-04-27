@@ -8,7 +8,9 @@ import java.util.Set;
 import wei.mark.standout.constants.StandOutFlags;
 import wei.mark.standout.ui.Window;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
@@ -642,6 +644,9 @@ public abstract class StandOutWindow extends Service {
 		Context c = getApplicationContext();
 		String contentTitle = getPersistentNotificationTitle(id);
 		String tickerText = getPersistentNotificationMessage(id);
+		String CHANNEL_ID = "my_channel_01";
+
+		createNotificationChannel();
 
 		// getPersistentNotification() is called for every new window
 		// so we replace the old notification with a new one that has
@@ -663,8 +668,40 @@ public abstract class StandOutWindow extends Service {
 		builder.setContentIntent(contentIntent);
 		builder.setSmallIcon(icon);
 		builder.setWhen(when);
+		builder.setChannelId(CHANNEL_ID);
 		return builder.build();
 	}
+
+	private void createNotificationChannel() {
+		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+		// The id of the channel.
+		String id = "my_channel_01";
+
+		// The user-visible name of the channel.
+		CharSequence name = "Logcat";
+
+		// The user-visible description of the channel.
+		String description = "View logcat";
+
+		int importance = NotificationManager.IMPORTANCE_LOW;
+
+		NotificationChannel mChannel = new NotificationChannel(id, name,importance);
+
+		// Configure the notification channel.
+		mChannel.setDescription(description);
+
+		mChannel.enableLights(true);
+		// Sets the notification light color for notifications posted to this
+		// channel, if the device supports this feature.
+		mChannel.setLightColor(Color.RED);
+
+		mChannel.enableVibration(true);
+		mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+
+		mNotificationManager.createNotificationChannel(mChannel);
+	}
+
 
 	/**
 	 * Return a hidden {@link Notification} for the corresponding id. The system
