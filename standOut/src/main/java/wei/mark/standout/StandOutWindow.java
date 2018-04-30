@@ -7,6 +7,8 @@ import java.util.Set;
 
 import wei.mark.standout.constants.StandOutFlags;
 import wei.mark.standout.ui.Window;
+
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -646,7 +648,9 @@ public abstract class StandOutWindow extends Service {
 		String tickerText = getPersistentNotificationMessage(id);
 		String CHANNEL_ID = "my_channel_01";
 
-		createNotificationChannel();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			createNotificationChannel();
+		}
 
 		// getPersistentNotification() is called for every new window
 		// so we replace the old notification with a new one that has
@@ -662,7 +666,7 @@ public abstract class StandOutWindow extends Service {
 					PendingIntent.FLAG_UPDATE_CURRENT);
 		}
 
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(c);
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(c, "default");
 		builder.setContentTitle(contentTitle);
 		builder.setContentText(tickerText);
 		builder.setContentIntent(contentIntent);
@@ -672,6 +676,7 @@ public abstract class StandOutWindow extends Service {
 		return builder.build();
 	}
 
+	@TargetApi(Build.VERSION_CODES.O)
 	private void createNotificationChannel() {
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
