@@ -27,7 +27,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.RemoteException;
-import android.support.v4.BuildConfig;
 import android.support.v4.content.FileProvider;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -85,10 +84,10 @@ public class LogcatViewerFloatingView extends StandOutWindow {
                     String logFilename = "log_" + System.currentTimeMillis() + ".txt";
                     mLogcatViewerService.startRecording(logFilename, mAdapter.getLogFilterText());
                 } catch (RemoteException e) {
-                    Log.e(LOG_TAG, "StartRecording:Trouble writing the log to a file");
+                    Log.e(LOG_TAG, "StartRecording:Trouble writing the log to a file", e);
                 }
             } catch (RemoteException e) {
-                Log.e(LOG_TAG, "Could not start LogcatViewerService service");
+                Log.e(LOG_TAG, "Could not start LogcatViewerService service", e);
             }
         }
 
@@ -141,11 +140,11 @@ public class LogcatViewerFloatingView extends StandOutWindow {
     public void onDestroy() {
         //if recording, stop recording before unbinding service.
         try {
-            if (mLogcatViewerService.isRecording()) {
+            if (mLogcatViewerService != null && mLogcatViewerService.isRecording()) {
                 stopRecording();
             }
         } catch (RemoteException e) {
-            Log.e(LOG_TAG, "isRecording() failed");
+            Log.e(LOG_TAG, "isRecording() failed", e);
         }
 
         unbindService(mLogcatViewerServiceConnection);
@@ -218,7 +217,7 @@ public class LogcatViewerFloatingView extends StandOutWindow {
         try {
             mLogcatViewerService.stopRecording();
         } catch (RemoteException e) {
-            Log.e(LOG_TAG, "StopRecording:Trouble writing the log to a file");
+            Log.e(LOG_TAG, "StopRecording:Trouble writing the log to a file", e);
         }
     }
 
@@ -229,7 +228,7 @@ public class LogcatViewerFloatingView extends StandOutWindow {
         try {
             mLogcatViewerService.pause();
         } catch (RemoteException e) {
-            Log.e(LOG_TAG, "Pausing logcat failed");
+            Log.e(LOG_TAG, "Pausing logcat failed", e);
         }
     }
 
@@ -240,7 +239,7 @@ public class LogcatViewerFloatingView extends StandOutWindow {
         try {
             mLogcatViewerService.resume();
         } catch (RemoteException e) {
-            Log.e(LOG_TAG, "Resuming logcat failed");
+            Log.e(LOG_TAG, "Resuming logcat failed", e);
         }
     }
 
@@ -301,7 +300,7 @@ public class LogcatViewerFloatingView extends StandOutWindow {
                 try {
                     mLogcatViewerService.stopRecording();
                 } catch (RemoteException e) {
-                    Log.e(LOG_TAG, "StopRecording:Trouble writing the log to a file");
+                    Log.e(LOG_TAG, "StopRecording:Trouble writing the log to a file", e);
                 }
 
             }
@@ -317,7 +316,7 @@ public class LogcatViewerFloatingView extends StandOutWindow {
                     String logFilename = "log_" + System.currentTimeMillis() + ".txt";
                     mLogcatViewerService.startRecording(logFilename, mAdapter.getLogFilterText());
                 } catch (RemoteException e) {
-                    Log.e(LOG_TAG, "StartRecording:Trouble writing the log to a file");
+                    Log.e(LOG_TAG, "StartRecording:Trouble writing the log to a file", e);
                 }
             }
         });

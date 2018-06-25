@@ -312,7 +312,7 @@ public class LogcatViewerService extends Service {
             logFileWriter.close();
 
         } catch (Exception e) {
-            Log.e(LOG_TAG, "recordLogData:Error writing the log to file. Exception: " + e.toString());
+            Log.e(LOG_TAG, "recordLogData:Error writing the log to file. Exception: " + e.toString(), e);
         }
     }
 
