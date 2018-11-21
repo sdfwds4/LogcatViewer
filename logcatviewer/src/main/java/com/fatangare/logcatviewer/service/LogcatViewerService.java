@@ -290,14 +290,10 @@ public class LogcatViewerService extends Service {
             //Since logcat keeps adding logentries to mRecordingData, keep it in local field.
             Vector<String> recordingData = new Vector<>(mRecordingData);
 
-            //Get log directory.
-            File logDir = Constants.getRecordDir(this);
-            logDir.mkdirs();
-
             //Get log file.
-            File logFile = new File(logDir, mRecordingFilename);
+            File logFile = new File(this.getFilesDir(), mRecordingFilename);
 
-            //Get writer to write in log file. Enable 'Append' mode.
+            //Get writer to write in log file. Enable 'Append' mode.=
             FileWriter logFileWriter = new FileWriter(logFile, true);
 
             //Write to log file.

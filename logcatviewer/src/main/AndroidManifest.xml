@@ -4,12 +4,9 @@
       android:versionCode="1"
       android:versionName="1.0">
 
-    <uses-permission android:name="android.permission.READ_LOGS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <application>
         <provider
-                android:name="com.fatangare.logcatviewer.service.LogcatFileProvider"
+                android:name="android.support.v4.content.FileProvider"
                 android:authorities="${applicationId}.logcatprovider"
                 android:exported="false"
                 android:grantUriPermissions="true">

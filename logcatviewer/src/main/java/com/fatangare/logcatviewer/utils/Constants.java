@@ -44,7 +44,10 @@ public class Constants {
      * @return directory File object.
      */
     public static File getRecordDir(Context context) {
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS + LOG_RECORD_DIR + context.getPackageName());
+//        File file = new File(context.getFilesDir(), LOG_RECORD_DIR + context.getPackageName());
+        File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOWNLOADS), LOG_RECORD_DIR);
+        return file;
     }
 
 }
