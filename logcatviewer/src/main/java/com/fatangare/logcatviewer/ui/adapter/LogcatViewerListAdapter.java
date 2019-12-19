@@ -285,6 +285,12 @@ public class LogcatViewerListAdapter extends BaseAdapter {
      * @param logcatEntry
      */
     private void addFilterLogcatEntry(String logcatEntry) {
+        // Clear arrays if the amount of entries gets too big, otherwise we eventually get OOM
+        if (mFilteredLogcatData.size() > 10000) {
+            mFilteredLogcatData.clear();
+            mLogcatData.clear();
+        }
+        
         if ((TextUtils.isEmpty(mLogPriorityLevel) || (!TextUtils.isEmpty(mLogPriorityLevel) && priorityLevelConditionForFiltering(logcatEntry))) &&
                 (TextUtils.isEmpty(mLogFilterText) || (!TextUtils.isEmpty(mLogFilterText) &&
                         logcatEntry.toLowerCase().contains(mLogFilterText.toLowerCase())))) {
@@ -300,12 +306,14 @@ public class LogcatViewerListAdapter extends BaseAdapter {
     private int getTextColorForLogcatEntry(String logcatEntry) {
         String priorityLevel = PRIORITY_LEVEL_VERBOSE; //default:verbose
 
-        //get priority level of log-entry.
-        for (String key : mPriorityLevelColorMap.keySet()) {
-            String key1 = key.trim() + "/";
-            if (logcatEntry.contains(key) || logcatEntry.contains(key1)) {
-                priorityLevel = key;
-                break;
+        if (logcatEntry != null) {
+            //get priority level of log-entry.
+            for (String key : mPriorityLevelColorMap.keySet()) {
+                String key1 = key.trim() + "/";
+                if (logcatEntry.contains(key) || logcatEntry.contains(key1)) {
+                    priorityLevel = key;
+                    break;
+                }
             }
         }
 

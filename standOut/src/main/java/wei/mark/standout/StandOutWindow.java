@@ -7,8 +7,13 @@ import java.util.Set;
 
 import wei.mark.standout.constants.StandOutFlags;
 import wei.mark.standout.ui.Window;
+
+import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.graphics.Color;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.app.PendingIntent;
@@ -641,6 +646,11 @@ public abstract class StandOutWindow extends Service {
 		Context c = getApplicationContext();
 		String contentTitle = getPersistentNotificationTitle(id);
 		String tickerText = getPersistentNotificationMessage(id);
+		String CHANNEL_ID = "my_channel_01";
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			createNotificationChannel();
+		}
 
 		// getPersistentNotification() is called for every new window
 		// so we replace the old notification with a new one that has
@@ -656,14 +666,47 @@ public abstract class StandOutWindow extends Service {
 					PendingIntent.FLAG_UPDATE_CURRENT);
 		}
 
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(c);
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(c, "default");
 		builder.setContentTitle(contentTitle);
 		builder.setContentText(tickerText);
 		builder.setContentIntent(contentIntent);
 		builder.setSmallIcon(icon);
 		builder.setWhen(when);
+		builder.setChannelId(CHANNEL_ID);
 		return builder.build();
 	}
+
+	@TargetApi(Build.VERSION_CODES.O)
+	private void createNotificationChannel() {
+		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+		// The id of the channel.
+		String id = "my_channel_01";
+
+		// The user-visible name of the channel.
+		CharSequence name = "Logcat";
+
+		// The user-visible description of the channel.
+		String description = "View logcat";
+
+		int importance = NotificationManager.IMPORTANCE_LOW;
+
+		NotificationChannel mChannel = new NotificationChannel(id, name,importance);
+
+		// Configure the notification channel.
+		mChannel.setDescription(description);
+
+		mChannel.enableLights(true);
+		// Sets the notification light color for notifications posted to this
+		// channel, if the device supports this feature.
+		mChannel.setLightColor(Color.RED);
+
+		mChannel.enableVibration(true);
+		mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+
+		mNotificationManager.createNotificationChannel(mChannel);
+	}
+
 
 	/**
 	 * Return a hidden {@link Notification} for the corresponding id. The system
@@ -1818,7 +1861,7 @@ public abstract class StandOutWindow extends Service {
 		 *            The id of the window.
 		 */
 		public StandOutLayoutParams(int id) {
-			super(200, 200, TYPE_PHONE,
+			super(200, 200, Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY : TYPE_PHONE,
 					StandOutLayoutParams.FLAG_NOT_TOUCH_MODAL
 							| StandOutLayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
 					PixelFormat.TRANSLUCENT);

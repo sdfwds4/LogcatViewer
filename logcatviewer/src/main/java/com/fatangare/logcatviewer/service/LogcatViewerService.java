@@ -202,6 +202,11 @@ public class LogcatViewerService extends Service {
                 //Read log entry.
                 logEntry = reader.readLine();
 
+                //Dunno why, but sometimes it starts giving nulls. Don't want to log these
+                if (logEntry == null) {
+                    continue;
+                }
+
                 //Send log entry to view.
                 sendLogEntry(logEntry);
 
@@ -285,14 +290,10 @@ public class LogcatViewerService extends Service {
             //Since logcat keeps adding logentries to mRecordingData, keep it in local field.
             Vector<String> recordingData = new Vector<>(mRecordingData);
 
-            //Get log directory.
-            File logDir = Constants.getRecordDir(this);
-            logDir.mkdirs();
-
             //Get log file.
-            File logFile = new File(logDir, mRecordingFilename);
+            File logFile = new File(this.getFilesDir(), mRecordingFilename);
 
-            //Get writer to write in log file. Enable 'Append' mode.
+            //Get writer to write in log file. Enable 'Append' mode.=
             FileWriter logFileWriter = new FileWriter(logFile, true);
 
             //Write to log file.
@@ -307,7 +308,7 @@ public class LogcatViewerService extends Service {
             logFileWriter.close();
 
         } catch (Exception e) {
-            Log.e(LOG_TAG, "recordLogData:Error writing the log to file. Exception: " + e.toString());
+            Log.e(LOG_TAG, "recordLogData:Error writing the log to file. Exception: " + e.toString(), e);
         }
     }
 

@@ -27,6 +27,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.RemoteException;
+import android.support.v4.content.FileProvider;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -79,8 +80,14 @@ public class LogcatViewerFloatingView extends StandOutWindow {
 
             try {
                 mLogcatViewerService.restart();
+                try {
+                    String logFilename = "log_" + System.currentTimeMillis() + ".txt";
+                    mLogcatViewerService.startRecording(logFilename, mAdapter.getLogFilterText());
+                } catch (RemoteException e) {
+                    Log.e(LOG_TAG, "StartRecording:Trouble writing the log to a file", e);
+                }
             } catch (RemoteException e) {
-                Log.e(LOG_TAG, "Could not start LogcatViewerService service");
+                Log.e(LOG_TAG, "Could not start LogcatViewerService service", e);
             }
         }
 
@@ -133,11 +140,11 @@ public class LogcatViewerFloatingView extends StandOutWindow {
     public void onDestroy() {
         //if recording, stop recording before unbinding service.
         try {
-            if (mLogcatViewerService.isRecording()) {
+            if (mLogcatViewerService != null && mLogcatViewerService.isRecording()) {
                 stopRecording();
             }
         } catch (RemoteException e) {
-            Log.e(LOG_TAG, "isRecording() failed");
+            Log.e(LOG_TAG, "isRecording() failed", e);
         }
 
         unbindService(mLogcatViewerServiceConnection);
@@ -210,7 +217,7 @@ public class LogcatViewerFloatingView extends StandOutWindow {
         try {
             mLogcatViewerService.stopRecording();
         } catch (RemoteException e) {
-            Log.e(LOG_TAG, "StopRecording:Trouble writing the log to a file");
+            Log.e(LOG_TAG, "StopRecording:Trouble writing the log to a file", e);
         }
     }
 
@@ -221,7 +228,7 @@ public class LogcatViewerFloatingView extends StandOutWindow {
         try {
             mLogcatViewerService.pause();
         } catch (RemoteException e) {
-            Log.e(LOG_TAG, "Pausing logcat failed");
+            Log.e(LOG_TAG, "Pausing logcat failed", e);
         }
     }
 
@@ -232,7 +239,7 @@ public class LogcatViewerFloatingView extends StandOutWindow {
         try {
             mLogcatViewerService.resume();
         } catch (RemoteException e) {
-            Log.e(LOG_TAG, "Resuming logcat failed");
+            Log.e(LOG_TAG, "Resuming logcat failed", e);
         }
     }
 
@@ -291,11 +298,11 @@ public class LogcatViewerFloatingView extends StandOutWindow {
                 view.setVisibility(View.GONE);
                 rootView.findViewById(R.id.recordOn).setVisibility(View.VISIBLE);
                 try {
-                    String logFilename = "log_" + System.currentTimeMillis() + ".txt";
-                    mLogcatViewerService.startRecording(logFilename, mAdapter.getLogFilterText());
+                    mLogcatViewerService.stopRecording();
                 } catch (RemoteException e) {
-                    Log.e(LOG_TAG, "StartRecording:Trouble writing the log to a file");
+                    Log.e(LOG_TAG, "StopRecording:Trouble writing the log to a file", e);
                 }
+
             }
         });
 
@@ -306,9 +313,10 @@ public class LogcatViewerFloatingView extends StandOutWindow {
                 view.setVisibility(View.GONE);
                 rootView.findViewById(R.id.record).setVisibility(View.VISIBLE);
                 try {
-                    mLogcatViewerService.stopRecording();
+                    String logFilename = "log_" + System.currentTimeMillis() + ".txt";
+                    mLogcatViewerService.startRecording(logFilename, mAdapter.getLogFilterText());
                 } catch (RemoteException e) {
-                    Log.e(LOG_TAG, "StopRecording:Trouble writing the log to a file");
+                    Log.e(LOG_TAG, "StartRecording:Trouble writing the log to a file", e);
                 }
             }
         });
@@ -510,12 +518,12 @@ public class LogcatViewerFloatingView extends StandOutWindow {
             return;
         }
 
-        Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND_MULTIPLE);
+        Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
 
         emailIntent.setData(Uri.parse("mailto:"));
-//      emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { "sandeep@fatangare.info" });
         emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "[" + getAppName() + "] Logcat Logs");
         emailIntent.setType("text/plain");
+
         emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Please find attached logcat logs file.");
 
         //Loop through selected files and add to uri list.
@@ -523,17 +531,18 @@ public class LogcatViewerFloatingView extends StandOutWindow {
         int cnt = checkedItemPositions.size();
 
         LogRecordsListAdapter logRecordsListAdapter = (LogRecordsListAdapter) mRecordsListView.getAdapter();
-        ArrayList<Uri> uris = new ArrayList<Uri>();
+        Uri fileUri = null;
+        //TODO: Prevent user from selecting more than one file. For now we just choose the last one if multiple are selected
         for (int index = 0; index < cnt; index++) {
             if (checkedItemPositions.valueAt(index)) {
                 File file = (File) logRecordsListAdapter.getItem(checkedItemPositions.keyAt(index));
-                uris.add(Uri.fromFile(file));
+                fileUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".logcatprovider", file);
             }
 
         }
 
         //add all files to intent data.
-        emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+        emailIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
 
         //Launching from service so set this flag.
         emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -550,7 +559,7 @@ public class LogcatViewerFloatingView extends StandOutWindow {
      * Delete selected 'Saved Logs' files.
      */
     private void deleteRecordedLogFiles() {
-        if (mListView.getCheckedItemCount() == 0) {
+        if (mRecordsListView.getCheckedItemCount() == 0) {
             Toast.makeText(getApplicationContext(), "First select log entry!", Toast.LENGTH_LONG).show();
             return;
         }
