@@ -47,6 +47,7 @@ import com.fatangare.logcatviewer.ui.adapter.LogcatViewerListAdapter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import wei.mark.standout.StandOutWindow;
 import wei.mark.standout.constants.StandOutFlags;
@@ -80,12 +81,6 @@ public class LogcatViewerFloatingView extends StandOutWindow {
 
             try {
                 mLogcatViewerService.restart();
-                try {
-                    String logFilename = "log_" + System.currentTimeMillis() + ".txt";
-                    mLogcatViewerService.startRecording(logFilename, mAdapter.getLogFilterText());
-                } catch (RemoteException e) {
-                    Log.e(LOG_TAG, "StartRecording:Trouble writing the log to a file", e);
-                }
             } catch (RemoteException e) {
                 Log.e(LOG_TAG, "Could not start LogcatViewerService service", e);
             }
@@ -298,7 +293,8 @@ public class LogcatViewerFloatingView extends StandOutWindow {
                 view.setVisibility(View.GONE);
                 rootView.findViewById(R.id.recordOn).setVisibility(View.VISIBLE);
                 try {
-                    mLogcatViewerService.stopRecording();
+                    String logFilename = "log_" + System.currentTimeMillis() + ".txt";
+                    mLogcatViewerService.startRecording(logFilename, mAdapter.getLogFilterText());
                 } catch (RemoteException e) {
                     Log.e(LOG_TAG, "StopRecording:Trouble writing the log to a file", e);
                 }
@@ -313,8 +309,7 @@ public class LogcatViewerFloatingView extends StandOutWindow {
                 view.setVisibility(View.GONE);
                 rootView.findViewById(R.id.record).setVisibility(View.VISIBLE);
                 try {
-                    String logFilename = "log_" + System.currentTimeMillis() + ".txt";
-                    mLogcatViewerService.startRecording(logFilename, mAdapter.getLogFilterText());
+                    mLogcatViewerService.stopRecording();
                 } catch (RemoteException e) {
                     Log.e(LOG_TAG, "StartRecording:Trouble writing the log to a file", e);
                 }
@@ -334,15 +329,15 @@ public class LogcatViewerFloatingView extends StandOutWindow {
                         ((LogRecordsListAdapter) mRecordsListView.getAdapter()).notifyDataSetChanged();
                 }
 
-                    if (!mRecordsListView.getAdapter().isEmpty()) {
-                        mMenuOptionLayout.setVisibility(View.VISIBLE);
-                        mRecordsListView.setVisibility(View.VISIBLE);
+                if (!mRecordsListView.getAdapter().isEmpty()) {
+                    mMenuOptionLayout.setVisibility(View.VISIBLE);
+                    mRecordsListView.setVisibility(View.VISIBLE);
 
-                        mNormalBottombarLayout.setVisibility(View.GONE);
-                        mRecordsBottombarLayout.setVisibility(View.VISIBLE);
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Empty Logs directory! Save logs first.", Toast.LENGTH_LONG).show();
-                    }
+                    mNormalBottombarLayout.setVisibility(View.GONE);
+                    mRecordsBottombarLayout.setVisibility(View.VISIBLE);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Empty Logs directory! Save logs first.", Toast.LENGTH_LONG).show();
+                }
             }
             }
         });

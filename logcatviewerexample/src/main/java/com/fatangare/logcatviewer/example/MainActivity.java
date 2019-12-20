@@ -19,20 +19,43 @@ package com.fatangare.logcatviewer.example;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.fatangare.logcatviewer.utils.LogcatViewer;
 
 public class MainActivity extends AppCompatActivity {
 
+    private AtomicBoolean mStart = new AtomicBoolean();
+
+    private Runnable mTestLog = new Runnable() {
+        @Override
+        public void run() {
+            while (mStart.get()) {
+                Log.d("Test", String.valueOf(System.currentTimeMillis()));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogcatViewer.showLogcatLoggerView(this);
+        LogcatViewer.showLogcatLoggerViewWith(this);
+        mStart.set(true);
+        new Thread(mTestLog).start();
     }
 
     @Override
     protected void onDestroy() {
-        LogcatViewer.closeLogcatLoggerView(this);
         super.onDestroy();
+        LogcatViewer.closeLogcatLoggerView(this);
+        mStart.set(false);
     }
 }

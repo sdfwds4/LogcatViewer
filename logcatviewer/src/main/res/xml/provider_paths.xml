@@ -3,7 +3,5 @@
     <external-path
         name="external_files"
         path="." />
-    <root-path
-        name="external_files"
-        path="/storage/emulated/0/Download/LogcatViewer"/>
+    <external-files-path name="hm_external_files" path="LogcatViewer" />
 </paths>
