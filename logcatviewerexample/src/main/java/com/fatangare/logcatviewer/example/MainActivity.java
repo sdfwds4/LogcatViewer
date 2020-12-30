@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogcatViewer.showLogcatLoggerViewWith(this);
         mStart.set(true);
         new Thread(mTestLog).start();
     }
@@ -55,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LogcatViewer.closeLogcatLoggerView(this);
         mStart.set(false);
     }
 }
