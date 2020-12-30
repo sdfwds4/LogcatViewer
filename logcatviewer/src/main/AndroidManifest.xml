@@ -4,6 +4,11 @@
       android:versionCode="1"
       android:versionName="1.0">
 
+    <!-- 外部存储读写权限 -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application>
         <provider
                 android:name="android.support.v4.content.FileProvider"
@@ -14,6 +19,11 @@
                     android:name="android.support.FILE_PROVIDER_PATHS"
                     android:resource="@xml/provider_paths"/>
         </provider>
+        <provider
+            android:name="com.fatangare.logcatviewer.provider.FloatingTouchInitProvider"
+            android:authorities="${applicationId}.logcatviewer.provider"
+            android:exported="false"
+            android:initOrder="110" />
 
         <service android:name="com.fatangare.logcatviewer.service.LogcatViewerService"
             android:label="LogcatLoggerService"></service>
