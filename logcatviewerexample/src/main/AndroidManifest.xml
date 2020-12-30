@@ -18,10 +18,6 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.fatangare.logcatviewer.service.LogcatViewerService"
-            android:label="LogcatLoggerService"></service>
-        <service android:name="com.fatangare.logcatviewer.service.LogcatViewerFloatingView"
-            android:label="LogcatLoggerFloatingView" > </service>
     </application>
 
 </manifest>

@@ -14,6 +14,11 @@
                     android:name="android.support.FILE_PROVIDER_PATHS"
                     android:resource="@xml/provider_paths"/>
         </provider>
+
+        <service android:name="com.fatangare.logcatviewer.service.LogcatViewerService"
+            android:label="LogcatLoggerService"></service>
+        <service android:name="com.fatangare.logcatviewer.service.LogcatViewerFloatingView"
+            android:label="LogcatLoggerFloatingView" > </service>
     </application>
 
 </manifest> 
