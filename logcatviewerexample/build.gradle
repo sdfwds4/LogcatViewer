@@ -1,6 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        SignV1 {
+            storeFile file('./cert_crPW9s6LcNkn_vptEKH6oEt9K.jks')
+            storePassword 'crPW9s6LcNkn'
+            keyPassword 'vptEKH6oEt9K'
+            keyAlias 'key0'
+            v2SigningEnabled false
+        }
+    }
     compileSdkVersion 27
     buildToolsVersion '28.0.3'
     defaultConfig {
@@ -9,8 +18,12 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
+        signingConfig signingConfigs.SignV1
     }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.SignV1
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
