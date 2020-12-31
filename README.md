@@ -9,7 +9,7 @@ Moreever, if correct tags are used, it can also be useful for performance measur
 
 #### How to plug LogcatViewer in your application?
 
-1. Add following line to build.gradle.
+Add following line to build.gradle.
 ```
 repositories {
     maven {     
@@ -18,20 +18,9 @@ repositories {
 }  
 
 dependencies { 
-    compile 'com.github.fatangare.LogcatViewer:logcatviewer:aadf092447'
+    debugImplementation 'com.github.sdfwds4:LogcatViewer:1.1'
     }
 ```
-2. Add following code to launch LogcatViewer floating view. - To launch logcatviewer floating view.
-```java
-LogcatViewer.showLogcatLoggerView(this);
-```
-3. Add following services to AndroidManifest.xml. - To register services.
-```xml
-<service android:name="com.fatangare.logcatviewer.service.LogcatViewerService"
-            android:label="LogcatLoggerService"></service>
- <service android:name="com.fatangare.logcatviewer.service.LogcatViewerFloatingView"
-            android:label="LogcatLoggerFloatingView" > </service>
- ```
 
 *That's all!*  
   
