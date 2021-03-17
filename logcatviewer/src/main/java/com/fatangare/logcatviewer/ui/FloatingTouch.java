@@ -16,7 +16,6 @@ import com.fatangare.logcatviewer.utils.LogcatViewer;
  */
 final class FloatingTouch extends XToast implements OnClickListener {
     private Activity activity;
-    private long lastClickTime;
 
     FloatingTouch(Activity activity) {
         super(activity);
@@ -30,9 +29,6 @@ final class FloatingTouch extends XToast implements OnClickListener {
 
     @Override
     public void onClick(XToast toast, View view) {
-        if(lastClickTime +250 > System.currentTimeMillis()) {
-            LogcatViewer.showLogcatLoggerView(this.activity);
-        }
-        lastClickTime =System.currentTimeMillis();
+        LogcatViewer.showLogcatLoggerView(this.activity);
     }
 }
